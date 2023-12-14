@@ -1,3 +1,6 @@
+import time
+
+
 class Lift:
     def __init__(self, currentFloor=0, requests=[]) -> None:
         self.currentFloor = currentFloor
@@ -10,6 +13,7 @@ class Lift:
         
     def move(self):
         self.requests = sorted(self.requests)
+        time.sleep(abs(self.requests[0]-self.currentFloor))
         self.currentFloor = self.requests[0]
         del self.requests[0]
         print("currentFloor = ", self.currentFloor)
