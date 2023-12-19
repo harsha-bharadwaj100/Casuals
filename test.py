@@ -1,3 +1,2 @@
-r = []
-print(len(r))
-print(r + 1)
+for x in range(100,1,-1):
+    print(x)
