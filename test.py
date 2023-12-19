@@ -1,2 +1,12 @@
-for x in range(100,1,-1):
-    print(x)
+from threading import Thread
+from time import sleep
+
+def fun():
+    sleep(5)
+    print("fun woke up!")
+
+t1 = Thread(target=fun)
+t1.start()
+t1.join()
+t1.start()
+print("Done!")
