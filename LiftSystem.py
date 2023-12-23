@@ -15,7 +15,7 @@ class Lift:
                 self.requests.append(f)
         # Th.Thread(target=self.move).start()
         if len(Th.enumerate()) > 2:
-            print("waiting...")
+            print(f"waiting...{Th.current_thread()}")
             time.sleep(1)
         self.move()
         
@@ -30,6 +30,7 @@ class Lift:
                         cache.append(x)# then add it to the temporary list and 
                         self.requests.remove(x) # delete it from requests
                 self.requests = sorted(cache)[::-1] + self.requests # now sort the temporary list backwards and add it from front to the requests
+                print(self.requests)
                 
             elif self.currentFloor < self.requests[0]: # if the very next request is greater than cureent floor
                 for x in range(self.currentFloor+1, self.requests[0]):# iterate through all the floor numbers in between current floor and very next request floor
@@ -38,6 +39,7 @@ class Lift:
                         cache.append(x)# then add it to the temporary list and 
                         self.requests.remove(x) # delete it from requests
                 self.requests = sorted(cache) + self.requests # now sort the temporary list forwards and add it from front to the requests
+                print(self.requests)
         except TypeError:
             exit()
         
@@ -45,20 +47,22 @@ class Lift:
             for x in range(abs(self.requests[0]-self.currentFloor)):
                 time.sleep(1)
                 self.currentFloor += 1
+                print(self.requests)
                 print("test currentFloor = ",self.currentFloor)
                 if len(Th.enumerate()) > 2:
-                    print("exiting...")
+                    print(f"exiting...{Th.current_thread()}")
                     exit()
         elif self.requests[0]<self.currentFloor:
             for x in range(abs(self.requests[0]-self.currentFloor)):
                 time.sleep(1)
                 self.currentFloor -= 1
+                print(self.requests)
                 print("test currentFloor = ",self.currentFloor)
                 if len(Th.enumerate()) > 2:
-                    print("exiting...")
+                    print(f"exiting...{Th.current_thread()}")
                     exit()
                 
-            self.currentFloor = self.requests[0]
+        self.currentFloor = self.requests[0]
         del self.requests[0]
         print("currentFloor = ", self.currentFloor)
         print(self.requests)
@@ -89,6 +93,7 @@ def listener():
     ExitVar = 0
     while True:
         req = simpledialog.askinteger("Title", "Floor: ")
+        print(f"Floor {req} requested")
         if req == None:
             E.requests == None
             time.sleep(0.1)
