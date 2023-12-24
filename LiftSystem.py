@@ -13,14 +13,14 @@ class Lift:
         for f in floors:
             if f not in self.requests:
                 self.requests.append(f)
-        # Th.Thread(target=self.move).start()
-        if len(Th.enumerate()) > 2:
+        
+        if Th.active_count() > 2:
             print(f"waiting...{Th.current_thread()}")
-            time.sleep(1)
+            print(Th.enumerate())
+            [t.join() for t in Th.enumerate()[1:-1]]
         self.move()
         
     def move(self):
-        # self.requests = sorted(self.requests)
         cache = [] # create a temporary list
         try:
             if self.currentFloor > self.requests[0]: # if the very next request is less than cureent floor
@@ -41,6 +41,7 @@ class Lift:
                 self.requests = sorted(cache) + self.requests # now sort the temporary list forwards and add it from front to the requests
                 print(self.requests)
         except TypeError:
+            print("Exiting Final Lift Thread")
             exit()
         
         if self.requests[0]>self.currentFloor:
@@ -49,7 +50,7 @@ class Lift:
                 self.currentFloor += 1
                 print(self.requests)
                 print("test currentFloor = ",self.currentFloor)
-                if len(Th.enumerate()) > 2:
+                if Th.active_count() > 2:
                     print(f"exiting...{Th.current_thread()}")
                     exit()
         elif self.requests[0]<self.currentFloor:
@@ -58,7 +59,7 @@ class Lift:
                 self.currentFloor -= 1
                 print(self.requests)
                 print("test currentFloor = ",self.currentFloor)
-                if len(Th.enumerate()) > 2:
+                if Th.active_count() > 2:
                     print(f"exiting...{Th.current_thread()}")
                     exit()
                 
@@ -67,40 +68,23 @@ class Lift:
         print("currentFloor = ", self.currentFloor)
         print(self.requests)
         while True:
-            if self.requests == None:
-                exit()
             if len(self.requests) != 0:
                 self.move()
             else:
-                print("Waiting in this damn thing...")
+                print("Waiting for new requests...")
                 time.sleep(0.5)
                 print(Th.enumerate())
 
-# class Building:
-#     def __init__(self) -> None:
-#         pass
-
 E = Lift()
-# E.request(7)
-# E.request(6)
-# E.request(9)
-# E.request(3,2,5)
-# E.request(1)
-# E.request(2,6,4)
-
 
 def listener():
-    ExitVar = 0
     while True:
         req = simpledialog.askinteger("Title", "Floor: ")
         print(f"Floor {req} requested")
         if req == None:
-            E.requests == None
-            time.sleep(0.1)
-            ExitVar += 1
-        if ExitVar == 3:
+            E.request(None)
+            [t.join() for t in Th.enumerate()[1:]]
             exit()
         Th.Thread(target=E.request, args=(req,)).start()
         print(Th.enumerate())
 listener()
-# runListener = Thread(target=listener)
