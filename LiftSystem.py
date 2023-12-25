@@ -18,6 +18,7 @@ class Lift:
             print(f"waiting...{Th.current_thread()}")
             print(Th.enumerate())
             [t.join() for t in Th.enumerate()[1:-1]]
+        print(f"resuming...{Th.current_thread()}")
         self.move()
         
     def move(self):
@@ -41,7 +42,7 @@ class Lift:
                 self.requests = sorted(cache) + self.requests # now sort the temporary list forwards and add it from front to the requests
                 print(self.requests)
         except TypeError:
-            print("Exiting Final Lift Thread")
+            print(f"Exiting Final Lift Thread{Th.current_thread()}")
             exit()
         
         if self.requests[0]>self.currentFloor:
@@ -67,13 +68,13 @@ class Lift:
         del self.requests[0]
         print("currentFloor = ", self.currentFloor)
         print(self.requests)
-        while True:
-            if len(self.requests) != 0:
-                self.move()
-            else:
-                print("Waiting for new requests...")
-                time.sleep(0.5)
-                print(Th.enumerate())
+        if len(self.requests) != 0:
+            self.move()
+        else:
+            print("Waiting for new requests...")
+            print(Th.enumerate())
+            print(f"exiting {Th.current_thread()}")
+            exit()
 
 E = Lift()
 
